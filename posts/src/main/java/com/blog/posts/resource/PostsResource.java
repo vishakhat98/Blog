@@ -1,6 +1,7 @@
 package com.blog.posts.resource;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 //import com.fasterxml.jackson.databind.ObjectWriter;
 
@@ -90,6 +92,25 @@ public class PostsResource {
 			return returnMsg;
 		}
 		return returnMsg;
+	}
+	
+	@GET
+	@Path("/{author}")
+	public String getAllPostsOfAuthor(@PathParam("author") String author) throws JsonProcessingException{
+		PostsService postsService = new PostsService();
+		ObjectMapper objectMapper = new ObjectMapper();
+		String response = null;
+		List<Document> posts = new ArrayList<>();
+		try {
+			posts = postsService.getAllPostsOfAuthor(author);
+			response = objectMapper.writeValueAsString(posts);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			response = objectMapper.writeValueAsString("FAILURE: Exception");
+		}
+		return response;
+		
 	}
 	
 	@Path("/comments")
